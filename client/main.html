@@ -1,0 +1,68 @@
+<head>
+  <title>pay.qrl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+</head>
+
+<body>
+  {{ > bodyContent }}
+  {{ > modal }}
+</body>
+
+<template name="bodyContent">
+  <div class="container">
+    <div class="box is-primary">
+      <div class="level is-mobile">
+        <div class="level-left">
+          <h1 class="title is-1">pay.qrl</h1>
+          <h5 class="subtitle is-5" style="position: absolute; margin-top: 70px;">buy an ebook with QRL</h5>
+        </div>
+        <div class="level-right is-hidden-mobile">
+          <figure class="image is-128x128">
+   
+          </figure>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+    <h3 class="title is-3 mb-1">Generate payment info</h3>
+    <div class="mt-2 mb-5 is-divider"></div>
+    <div class="field">
+      <label>Your QRL address</label>
+      <div class="control">
+        <input class="input is-medium" type="email" placeholder="QRL address" id="userId">
+      </div>
+    </div>
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link" id="submit-identity">Submit</button>
+      </div>
+    </div>
+  </div>
+  </div>
+</template>
+
+<template name="modal">
+  <div id="modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Instructions</p>
+        <button class="delete mc" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <div id="preamble">
+          1. Send 1 QRL to <span style="word-break: break-all;">Q01050038ca2264a06ee154a681201f99079bcd1ddf28355060b969daed25dd98efbf9ffd61b9b6</span> <strong>putting the following unique reference in the Message field:</strong><br>
+        </div>
+        <div id="outputJson"></div>
+        <div id="postamble">
+          <br>
+          2. Wait for your transaction to confirm on the QRL network and check back to this window.<br><br>
+          <strong>Do not close this window until you have received your ebook!</strong>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-primary mc">Cancel</button><span class="loader"></span><span id="watching"> Watching QRL network for transaction...</span>
+      </footer>
+    </div>
+  </div>
+</template>

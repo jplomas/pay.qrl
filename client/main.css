@@ -1,0 +1,38 @@
+html {
+  background-color: #dcccbb;
+}
+body {
+  padding: 10px;
+  font-family: sans-serif;
+}
+.box.is-primary {
+  background-color: #2B50AA; 
+}
+.box.is-primary .title {
+  color: #fff;
+}
+.box.is-primary .subtitle {
+  color: #fff;
+}
+.button.is-link {
+  background-color: #2B50AA; 
+}
+.button.is-link:hover {
+  background-color: #00abe7; 
+}
+.button.is-primary {
+  background-color: #2B50AA; 
+}
+.button.is-primary:hover {
+  background-color: #00abe7; 
+}
+.modal-card-body {
+  color: #000;
+}
+#outputJson {
+   word-break: break-all;
+}
+#watching {
+  color: #00abe7;
+  padding-left: 7px;
+}

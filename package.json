@@ -1,0 +1,31 @@
+{
+  "name": "zeus-proxy",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.8.3",
+    "@theqrl/node-helpers": "^0.6.0",
+    "@theqrl/qrl-proto-sha256": "^3.1.0",
+    "@theqrl/qrlbase.proto": "^1.0.0",
+    "@theqrl/validate-qrl-address": "^3.0.0",
+    "google-proto-files": "^2.3.0",
+    "jquery": "^3.4.1",
+    "json-formatter-js": "^2.3.4",
+    "meteor-node-stubs": "^1.0.0",
+    "qrlbase.proto": "^1.0.0",
+    "sha256": "^0.2.0",
+    "underscore": "^1.12.0"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.js",
+      "server": "server/main.js"
+    },
+    "testModule": "tests/main.js"
+  }
+}
