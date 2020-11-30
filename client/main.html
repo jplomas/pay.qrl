@@ -6,6 +6,7 @@
 <body>
   {{ > bodyContent }}
   {{ > modal }}
+  {{ > errorModal }}
 </body>
 
 <template name="bodyContent">
@@ -30,6 +31,7 @@
     </div>
   </div>
   </div>
+  <canvas id="pdfcanvas"></canvas>
 </template>
 
 <template name="modal">
@@ -53,6 +55,25 @@
       </section>
       <footer class="modal-card-foot">
         <button class="button is-primary mc">Cancel</button><span class="loader"></span><span id="watching"> Watching QRL network for transaction...</span>
+      </footer>
+    </div>
+  </div>
+</template>
+
+<template name="errorModal">
+  <div id="errorModal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Error</p>
+        <button class="delete mc" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <div id="errorText">
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-primary mc">Close</button>
       </footer>
     </div>
   </div>

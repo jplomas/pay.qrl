@@ -7,6 +7,9 @@ let timerHandler = null
 const checkIfPaymentMade = () => {
   Meteor.call('payment.received', document.getElementById('outputJson').textContent, (error, result) => {
     console.log({ error, result })
+    if (result === 'Yes') {
+      document.location = `/download?id=${document.getElementById('outputJson').textContent}`
+    }
   })
 }
 
@@ -16,6 +19,10 @@ Template.bodyContent.events({
     if (id.length > 0) {
       Meteor.call('submitIdentity', id, (error, result) => {
         console.log({ error, result })
+        if (error) {
+          document.getElementById('errorText').textContent = error.error
+          document.getElementById('errorModal').classList.add('is-active')
+        }
         if (!error) {
           document.getElementById('outputJson').textContent = result.hash
           document.getElementById('modal').classList.add('is-active')
@@ -33,5 +40,12 @@ Template.modal.events({
     $('.modal').removeClass('is-active')
     $('html').removeClass('is-clipped')
     Meteor.clearInterval(timerHandler)
+  },
+})
+
+Template.errorModal.events({
+  'click .mc': () => {
+    $('.modal').removeClass('is-active')
+    $('html').removeClass('is-clipped')
   },
 })
