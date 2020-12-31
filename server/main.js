@@ -163,7 +163,12 @@ Meteor.startup(() => {
             _.each(toCheck, async (txD) => {
               const txDetail = await getTx(txD)
               if (txDetail.transaction.tx.transactionType === 'transfer') {
-                if (Buffer.from(txDetail.transaction.tx.transfer.message_data).toString() === id) {
+                if (Buffer.from(txDetail.transaction.tx.transfer.message_data).toString() === id && parseInt(txDetail.transaction.tx.transfer.amounts[0], 10) >= 1000000000) {
+                  console.log(
+                    `txid = ${id} is a new and valid tx (${txDetail.transaction.tx.transfer.amounts[0]} Shor and msg ${Buffer.from(
+                      txDetail.transaction.tx.transfer.message_data,
+                    ).toString()}`,
+                  )
                   valid.push(id)
                 }
               }
