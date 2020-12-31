@@ -13,14 +13,15 @@ import QrlNode from './qrlNode'
 const ip = 'testnet-1.automated.theqrl.org'
 // const ipMainnet = 'mainnet-1.automated.theqrl.org'
 const port = '19009'
-const testnet = new QrlNode(ip, port)
+const node = new QrlNode(ip, port)
 // const mainnet = new QrlNode(ipMainnet, port)
 const VENDOR_WALLET = 'Q01050038ca2264a06ee154a681201f99079bcd1ddf28355060b969daed25dd98efbf9ffd61b9b6'
+const PAYLOAD = 'QRL_whitepaper.pdf'
 
 let doneStartup = false
 let vendorWalletTransactions = 0 // eslint-disable-line
 let vendorWalletIncomingTransactions = []
-let debug = false
+
 const valid = []
 
 // TODO
@@ -28,9 +29,9 @@ const valid = []
 // * check Tx is of sufficient value
 //
 
-const getTx = (tx) => testnet.api('GetObject', { query: Buffer.from(tx, 'hex') }).then((res) => res)
+const getTx = (tx) => node.api('GetObject', { query: Buffer.from(tx, 'hex') }).then((res) => res)
 
-const howManyTx = (addr) => testnet
+const howManyTx = (addr) => node
   .api('GetOptimizedAddressState', { address: addr })
   .then((res) => parseInt(res.state.transaction_hash_count, 10))
 
@@ -51,7 +52,7 @@ const getAddrTx = (addr) => {
     // check if this is greater than 'known' transactions
     if (res > vendorWalletTransactions) {
       // TO DO - logic if > 100
-      testnet
+      node
         .api('GetMiniTransactionsByAddress', {
           address: apiAddr,
           item_per_page: 100,
@@ -72,23 +73,23 @@ const getAddrTx = (addr) => {
 }
 
 const checkConnectionStatus = () => {
-  if (testnet.connection === true) {
-    console.log('Testnet is connected OKAY')
+  if (node.connection === true) {
+    console.log('Node is connected OKAY')
     if (!doneStartup) {
       getAddrTx(VENDOR_WALLET)
       doneStartup = true
     }
   } else {
-    console.log('ERROR: Testnet is not connected')
-    testnet.connect()
+    console.log('ERROR: Node is not connected')
+    node.connect()
   }
 }
 
 Meteor.startup(() => {
-  testnet.connect().then(() => {
-    console.log('Connection attempt to Testnet')
-    console.log(`Testnet connection status: ${testnet.connection}`)
-    if (testnet.connection) {
+  node.connect().then(() => {
+    console.log('Connection attempt to Node')
+    console.log(`Node connection status: ${node.connection}`)
+    if (node.connection) {
       getAddrTx(VENDOR_WALLET)
       doneStartup = true
     }
@@ -110,12 +111,15 @@ Meteor.startup(() => {
     })
     if (alreadyValid) {
       console.log(`Download request with an id that matches a Tx: ${id}`)
-      const pdfData = fs.readFileSync(Assets.absoluteFilePath('QRL_whitepaper.pdf'))
+      const pdfData = fs.readFileSync(Assets.absoluteFilePath(PAYLOAD))
       res.writeHead(200, {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'inline; filename=payload.pdf',
       })
       res.end(pdfData)
+    } else {
+      res.writeHead(500)
+      res.end('Not authorised.')
     }
   })
 
@@ -149,10 +153,8 @@ Meteor.startup(() => {
       const apiAddr = Buffer.from(VENDOR_WALLET.substring(1), 'hex')
       return howManyTx(apiAddr).then(async (currTx) => {
         if (currTx > vendorWalletTransactions) {
-          let oldTx = vendorWalletIncomingTransactions
-          if (debug) {
-            oldTx = _.first(oldTx, 3)
-          }
+          vendorWalletTransactions = currTx
+          const oldTx = vendorWalletIncomingTransactions
           getAddrTx(VENDOR_WALLET)
           console.log({ vendorWalletIncomingTransactions, oldTx })
           const toCheck = _.without(vendorWalletIncomingTransactions, oldTx)
@@ -169,15 +171,9 @@ Meteor.startup(() => {
           }
           return 'No'
         }
+        vendorWalletTransactions = currTx
         return 'No'
       })
-    },
-    mock() {
-      vendorWalletTransactions -= 1
-    },
-    mock2() {
-      vendorWalletTransactions -= 1
-      debug = true
     },
   })
 })

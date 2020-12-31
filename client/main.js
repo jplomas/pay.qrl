@@ -6,8 +6,8 @@ let timerHandler = null
 
 const checkIfPaymentMade = () => {
   Meteor.call('payment.received', document.getElementById('outputJson').textContent, (error, result) => {
-    console.log({ error, result })
     if (result === 'Yes') {
+      console.log({ error, result })
       document.location = `/download?id=${document.getElementById('outputJson').textContent}`
     }
   })
